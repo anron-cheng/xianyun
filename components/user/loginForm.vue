@@ -70,18 +70,25 @@ export default {
             // 如果valid为true
           if (valid) {
             // 提交表单数据
-            var res = await this.$axios({
-               url:'/accounts/login',
-               method:'POST',
-               data:this.form
-           })
+        //     var res = await this.$axios({
+        //        url:'/accounts/login',
+        //        method:'POST',
+        //        data:this.form
+        //    })
 
-           if(res.status==200){
-               this.$store.state
-               const data = res.data
-            //    将数据存入store中
-            this.$store.commit('user/setUserData',data)
-           }
+            // 利用store异步方法action封装登录方法
+            this.$store.dispatch('user/userLogin',this.form)
+
+        //    if(res.status==200){
+        //        this.$message.success('登录成功')
+        //        this.$store.state
+        //        const data = res.data
+        //     //    将数据存入store中
+        //     this.$store.commit('user/setUserData',data)
+        //     setTimeout(()=>{
+        //         this.$router.push('/')
+        //     },1000)
+        //    }
 
 
           } 

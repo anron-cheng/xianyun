@@ -111,14 +111,19 @@ export default {
                 this.$message.error('请输入正确的手机格式')
                 return
             }
-            const res = await this.$axios({
-                url:"/captchas",
-                method:'POST',
-                data:{
-                    tel:this.form.username
-                }
-            })
-            this.$message.success('手机验证码为'+res.data.code)
+            // const res = await this.$axios({
+            //     url:"/captchas",
+            //     method:'POST',
+            //     data:{
+            //         tel:this.form.username
+            //     }
+            // })
+            const data = {
+                tel:this.form.username
+            }
+            // 利用store异步方法action封装登录方法
+            this.$store.dispatch('user/authCode',data)
+            // this.$message.success('手机验证码为'+res.data.code)
             
         },
 
@@ -141,7 +146,7 @@ export default {
                     setTimeout(()=>{
                         this.$store.commit('user/setUserData',res.data)
                         this.$router.push('/')
-                    },1500)
+                    },1000)
                     
                 }
                 
