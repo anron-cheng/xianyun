@@ -3,7 +3,7 @@
         <el-row  type="flex" justify="space-between">
 
             <!-- 顶部过滤列表 -->
-            <div class="flights-content">
+            <div class="flights-content" >
                 <!-- 过滤条件 -->
                 <div>
 
@@ -11,16 +11,32 @@
 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
-
+                <div  v-loading="loading">
                 <!-- 航班信息 -->
-                <FlightsItem v-for="(item,index) in fligthsData.flights" :key="index" :item='item'/>
+                <FlightsItem v-for="(item,index) in changePage" :key="index" :item='item' />
+                </div>
             </div>
 
             <!-- 侧边栏 -->
             <div class="aside">
                 <!-- 侧边栏组件 -->
             </div>
+
         </el-row>
+            <div class="block" v-if="!loading && fligthsData.total>0" >
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="1"
+                    :page-sizes="[5, 10, 15, 20]"
+                    :page-size="pagesize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
+            </div>
+            <div v-if="fligthsData.total===0" class="error">
+                暂无该航班信息
+            </div>
     </section>
 </template>
 
@@ -34,11 +50,43 @@ export default {
     },
     data(){
         return {
-            fligthsData:[]
+            // 飞机列表后台数据
+            fligthsData:[],
+            // 当前页数
+            pageindex:1,
+            // 每页显示多少条数据
+            pagesize:5,
+            // 总共数据的条数
+            total:'',
+            // 根于pagesize显示的后台数据数量
+            // flightsItem:[],
+            loading:true
+
+           
         }
     },
     methods:{
+        // 改变每页条数时触发
+      handleSizeChange(val) {
+        this.pagesize = val
+        this.pageindex = 1
+        
+      },
+    //   改变页数时触发
+      handleCurrentChange(val) {
+        this.pageindex = val
+       
+      }
+    },
+    computed:{
+        changePage(){
+            if(!this.loading){
+            const arr = this.fligthsData.flights.slice((this.pageindex-1)*this.pagesize,(this.pagesize*this.pageindex))
+            return arr
+            }
+            
 
+        }
     },
     mounted(){
         // 获取后台机票数据
@@ -47,6 +95,11 @@ export default {
             params:this.$route.query
         }).then(res=>{
             this.fligthsData = res.data
+            console.log(this.fligthsData);
+            
+            this.total = res.data.flights.length
+            this.loading = false
+            // this.flightsItem = this.fligthsData.flights.slice(0,(this.pagesize*this.pageindex))
             
         })
     }
@@ -65,4 +118,7 @@ export default {
     .aside{
         width:240px;
     } 
+    .error{
+        margin: 0 auto;
+    }
 </style> 
