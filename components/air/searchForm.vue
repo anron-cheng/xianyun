@@ -62,6 +62,7 @@
                 <span @click="handleReverse">换</span>
             </div>
         </el-form>  
+        
       </div>
 </template>
 
@@ -120,8 +121,9 @@ export default {
                     newData.push(v)   
                 });
                     this.newData = newData
-                    cb(newData)   
+                    cb(newData)
             })
+            
             // 请求搜索建议城市
             
             // var arr = [
@@ -139,7 +141,6 @@ export default {
         },
         // 出发城市下拉选择时触发
         handleDepartSelect(item) {
-          console.log(item);
           
             this.form.departCity = item.value
             this.form.departCode = item.sort
