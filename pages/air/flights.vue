@@ -5,7 +5,7 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters :fligthsData="fligthsData" @filteritem='filteritem'/>
+          <FlightsFilters :fligthsData="fligthsData" @filteritem="filteritem" />
         </div>
 
         <!-- 航班头部布局 -->
@@ -19,7 +19,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
-        <FlightsAside/>
+        <FlightsAside />
       </div>
     </el-row>
     <div class="block" v-if="!loading && fligthsData.total>0">
@@ -53,10 +53,10 @@ export default {
     return {
       // 飞机列表后台数据
       fligthsData: {
-         options:{}
+        options: {}
       },
-      backupsfligthsData:{
-        options:{}
+      backupsfligthsData: {
+        options: {}
       },
       // 当前页数
       pageindex: 1,
@@ -71,11 +71,10 @@ export default {
   },
   methods: {
     // 筛选信息
-    filteritem(arr){
-       this.backupsfligthsData.flights = arr
-       this.total = arr.length+1
-        
-    },  
+    filteritem(arr) {
+      this.backupsfligthsData.flights = arr;
+      this.total = arr.length + 1;
+    },
     // 改变每页条数时触发
     handleSizeChange(val) {
       this.pagesize = val;
@@ -96,9 +95,8 @@ export default {
         return arr;
       }
     },
-    FlightsAside(){
-        
-    }
+    FlightsAside() {},
+    getFlightsData() {}
   },
   mounted() {
     // 获取后台机票数据
@@ -107,10 +105,24 @@ export default {
       params: this.$route.query
     }).then(res => {
       this.fligthsData = res.data;
-      this.backupsfligthsData = {...res.data}
-      this.total = res.data.flights.length+1;
+      this.backupsfligthsData = { ...res.data };
+      this.total = res.data.flights.length + 1;
       this.loading = false;
     });
+  },
+  watch: {
+    $route() {
+      // 获取后台机票数据
+      this.$axios({
+        url: "/airs",
+        params: this.$route.query
+      }).then(res => {
+        this.fligthsData = res.data;
+        this.backupsfligthsData = { ...res.data };
+        this.total = res.data.flights.length + 1;
+        this.loading = false;
+      });
+    }
   }
 };
 </script>

@@ -93,7 +93,7 @@ export default {
     methods: {
         // tab切换时触发
         handleSearchTab(item, index){
-            
+            this.$alert('该功能还在完善中', '非常抱歉',)
         },
         
         // 出发城市输入框值发生变化时候会触发
@@ -193,7 +193,9 @@ export default {
                 this.$router.push({
                 path: "/air/flights",
                 query: this.form
+                // 将搜索过得地址存入vuex中，作为历史记录
             })
+            this.$store.commit('savehistory/setHistory',this.form)
            }
            
         }
