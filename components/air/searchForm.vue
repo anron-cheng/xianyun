@@ -188,7 +188,6 @@ export default {
                   return 
                 }
             })
-            console.log(this.form);
             
            if(pass){
                 this.$router.push({
