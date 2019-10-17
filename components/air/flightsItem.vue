@@ -45,7 +45,8 @@
                         <el-col :span="3" class="choose-button">
                             <el-button 
                             type="warning" 
-                            size="mini">
+                            size="mini"
+                            @click="handleChoose(item.id, seat.seat_xid)">
                             选定
                             </el-button>
                             <p>剩余：{{seat.discount}}</p>
@@ -79,7 +80,15 @@ export default {
         }
     },
     methods:{
-
+        handleChoose(id, seatId){
+            this.$router.push({
+                path: "/air/order", 
+                query: {
+                    id,
+                    seat_xid: seatId
+                }
+            })
+        }
     },
     mounted(){
         // 计算到达目的地需要的时间渲染到页面中

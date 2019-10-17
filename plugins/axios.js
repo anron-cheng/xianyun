@@ -7,6 +7,11 @@ export default (context)=>{
         if(statusCode==400){
             Message.error(message)
         }
+        if(statusCode==403){
+            Message.error('请首先登录噢')
+            console.log($axios);
+            
+        }
     });
     
     

@@ -29,6 +29,9 @@ export const actions = {
            const data = res.data
         //    将数据存入store中
         store.commit('setUserData',data)
+        setTimeout(v=>{
+            this.$router.back()
+        },1000)
         }
     },
     // 用户获取验证码
