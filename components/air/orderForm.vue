@@ -207,7 +207,13 @@ export default {
                     if(res.status==200){
                         // this.this.$store.commit('userorder/setOrderForm',{})
                         this.$message.success('恭喜你，订单提交成功')
-                        console.log(res);
+                        const{data}= res.data
+                        this.$router.push({
+                            path:'/air/pay',
+                            query:{
+                                id:data.id
+                            }
+                        })
                         
                     }
                     
