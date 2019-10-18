@@ -59,7 +59,7 @@
                 <div class="insurance-item"
                 v-for='(item,index) in flightsData.insurances'>
                     <el-checkbox 
-                    :label="`${item.type}：￥${item.price}/份×${users.length}  最高赔付${item.compensation}`" 
+                    :label="`${item.type}：￥${item.price}/份×1  最高赔付${item.compensation}`" 
                     @change="getInsurances(item.id)"
                     border>
                     </el-checkbox> 
@@ -90,6 +90,7 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+        <span v-show='false'>{{allprice}}</span>
     </div>
 </template>
 
@@ -116,6 +117,7 @@ export default {
             seat_xid:0,
             // 座位ID
             air:0,
+            price:0,
             
             rulesState:true,
         }
@@ -228,12 +230,31 @@ export default {
             }
         }).then(res=>{
             this.flightsData = res.data
+            // 将内容传到父组件
+            this.$emit('flightsData',this.flightsData) 
         })
 
         // // 获取store里面数据
         // this.orderInfo = this.$store.state.userorder.orderForm;
         // console.log(this.$route);
         
+    },
+    computed:{
+        // 计算总价格
+        allprice(){
+            if(!this.flightsData.airport_tax_audlet) return
+            const total = this.users.length 
+            this.price = this.flightsData.seat_infos.org_settle_price*total
+            this.price += this.flightsData.airport_tax_audlet*total
+            this.price += this.insurances.length*30*total
+
+            const numAndPrice = {
+                price:this.price,
+                num:this.users.length
+            }
+            this.$emit('total',numAndPrice)
+            return 123
+        }
     }
 }
 </script>
