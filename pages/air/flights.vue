@@ -73,7 +73,7 @@ export default {
     // 筛选信息
     filteritem(arr) {
       this.backupsfligthsData.flights = arr;
-      this.total = arr.length + 1;
+      this.total = arr.length ;
     },
     // 改变每页条数时触发
     handleSizeChange(val) {
@@ -106,7 +106,7 @@ export default {
     }).then(res => {
       this.fligthsData = res.data;
       this.backupsfligthsData = { ...res.data };
-      this.total = res.data.flights.length + 1;
+      this.total = res.data.flights.length ;
       this.loading = false;
     });
   },
@@ -119,7 +119,7 @@ export default {
       }).then(res => {
         this.fligthsData = res.data;
         this.backupsfligthsData = { ...res.data };
-        this.total = res.data.flights.length + 1;
+        this.total = res.data.flights.length ;
         this.loading = false;
       });
     }

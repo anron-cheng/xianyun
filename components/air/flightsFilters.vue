@@ -8,7 +8,7 @@
                 {{fligthdetail.departDate}} 
             </el-col>
             <el-col :span="4">
-                <el-select size="mini" v-model="airport" placeholder="起飞机场" @change="handleAirport">
+                <el-select size="mini" v-model="filters.airport" placeholder="起飞机场" >
                     <el-option 
                     v-for="(item,index) in fligthsData.options.airport"
                     :key="index"
@@ -19,7 +19,7 @@
                 </el-select>
             </el-col>
             <el-col :span="4">
-                <el-select size="mini" v-model="flightTimes"  placeholder="起飞时间" @change="handleFlightTimes">
+                <el-select size="mini" v-model="filters.flightTimes"  placeholder="起飞时间" >
                     <el-option
                     v-for="(item,index) in fligthsData.options.flightTimes"
                     :key="index"
@@ -30,7 +30,7 @@
                 </el-select>
             </el-col>
             <el-col :span="4">
-                <el-select size="mini" v-model="company"  placeholder="航空公司" @change="handleCompany">
+                <el-select size="mini" v-model="filters.company"  placeholder="航空公司" >
                     <el-option
                     v-for="(item,index) in fligthsData.options.company"
                     :key="index"
@@ -40,7 +40,7 @@
                 </el-select>
             </el-col>
             <el-col :span="4">
-                <el-select size="mini" v-model="airSize" placeholder="机型" @change="handleAirSize">
+                <el-select size="mini" v-model="filters.airSize" placeholder="机型" >
                     <el-option
                     v-for="(item,index) in planeSize"
                     :key="index"
@@ -68,11 +68,14 @@
 export default {
     data(){
         return {
-            airport: "",        // 机场
-            flightTimes: "",    // 出发时间
-            company: "",        // 航空公司
-            airSize: "",        // 机型大小
-            // 目的地和出发时间信息
+            filters:{
+                airport: "",        // 机场
+                flightTimes: "",    // 出发时间
+                company: "",        // 航空公司
+                airSize: "",        // 机型大小
+                // 目的地和出发时间信息
+                
+            },
             fligthdetail:''  ,
             planeSize:[
                 {size:'L',type:'大'},
@@ -87,50 +90,53 @@ export default {
             default:[],
         }
     },
+    watch:{
+        // 多重过滤
+        filters:{
+            deep:true,
+            handler(){
+                const arr = this.fligthsData.flights.filter(v=>{
+                   let res = true 
+                //    过滤起飞机场
+                   if(this.filters.airport && v.org_airport_name!==this.filters.airport){
+                       res = false
+                   }
+                //    出发时间过滤
+                   if(this.filters.flightTimes){
+
+                    const dtime = this.filters.flightTimes.split(',')
+                    const start =  v.dep_time.split(':')
+                    res =  (+dtime[0]) <= (+start[0]) && (+dtime[1])>(+start[0])
+                   }
+                // 航空公司过滤
+                    if(this.filters.company && v.airline_name!==this.filters.company){
+                       res = false
+                   }
+                // 飞机大小过滤
+                    if(this.filters.airSize && v.plane_size!==this.filters.airSize){
+                       res = false
+                   }
+                   return res
+                })
+               this.$emit('filteritem',arr) 
+            }
+        }
+    },
     methods: {
-        // 选择机场时候触发
-        handleAirport(value){
-            const arr = this.fligthsData.flights.filter(v=>{
-                return v.org_airport_name ===value
-            })
-            this.$emit('filteritem',arr)
-        },
-
-        // 选择出发时间时候触发
-        handleFlightTimes(value){
-            const arr = value.split(',')
-            const resArr = this.fligthsData.flights.filter(v=>{
-                 const start =  v.dep_time.split(':')
-                 return (+arr[0]) <= (+start[0]) && (+arr[1])>(+start[0])
-            })
-            this.$emit('filteritem',resArr)  
-        },
-
-         // 选择航空公司时候触发
-        handleCompany(value){
-            const arr = this.fligthsData.flights.filter(v=>{
-                return v.airline_name ===value
-            })
-            this.$emit('filteritem',arr)
-        },
-
-         // 选择机型时候触发
-        handleAirSize(value){
-            const arr = this.fligthsData.flights.filter(v=>{
-                return v.plane_size ===value
-            })
-            this.$emit('filteritem',arr)
-        },
-        
         // 撤销条件时候触发
         handleFiltersCancel(){
+            // 所有过滤条件清空
+            Object.keys(this.filters).forEach(v=>{
+                this.filters[v]= ''
+            })
+            // 将所有数据返回给父组件
             const arr = this.fligthsData.flights
             this.$emit('filteritem',arr)
         },
     },
     mounted(){
         // 根据路由获取航班信息
-        this.fligthdetail = this.$route.query
+        this.fligthdetail = this.$route.query 
     }
 }
 </script>
