@@ -39,6 +39,8 @@ export default {
     },
     mounted(){
         const {id} = this.$route.query
+         console.log(location.pathname);
+        
         
         
         // 设置延迟等待vuex获取数据
