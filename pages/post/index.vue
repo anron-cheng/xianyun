@@ -155,6 +155,7 @@ export default {
         padding: 0 20px;
         box-sizing: border-box;
         height: 40px;
+        outline: none;
       }
       > span {
         position: absolute;
@@ -178,7 +179,7 @@ export default {
         font-size: 18px;
         height: 50px;
         color: orange;
-        padding-bottom: 10px;
+        // padding-bottom: 10px;
         border-bottom: 2px solid orange;
       }
       >button{

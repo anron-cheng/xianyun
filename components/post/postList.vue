@@ -1,10 +1,11 @@
 <template>
   <div class="box">
     <a to class="post">
-      <img :src="list.images[0]" alt="" class="singlePicture" v-if="list.images.length<=2">
+      <img :src="list.images[0]" alt="" class="singlePicture" v-if="list.images.length!=0 && list.images.length<=2 ">
+      <img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3885376987,415548851&fm=11&gp=0.jpg" alt="" class="singlePicture" v-if="list.images.length==0">
       <div class="container">
       <h3>{{list.title}}</h3>
-      <span class="content">
+      <span class="content" :class="list.summary? '':'contentNull'">
           {{list.summary}}
       </span>
       <div class="pictureBox" v-if="list.images.length>2">
@@ -18,11 +19,11 @@
           <span>{{list.cityName}}</span>
           <span>by</span>
           <img :src="`${$axios.defaults.baseURL}${list.account.defaultAvatar}`" alt="">
-          <span class="username">{{list.account.username}}</span>
+          <span class="username">{{list.account.nickname}}</span>
           <i class="el-icon-view"></i>
           <span>{{list.watch}}</span>
           </div>
-          <span class="userLike">{{list.like}} 赞</span>
+          <span class="userLike" v-text="list.like? list.like+' 赞': '0 赞'">{{list.like}} 赞</span>
       </div>
       </div>
     </a>
@@ -81,6 +82,10 @@ export default {
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 3;
       overflow: hidden;
+    }
+    .contentNull{
+      width: 485px;
+      height: 89px;
     }
     .pictureBox{
         padding: 15px 0 30px 0 ;
